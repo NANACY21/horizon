@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personal.mapper.OrdersMapper">
+
+    <!--二级缓存-->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+
+    <!--用户 - 订单 1-n-->
+    <resultMap id="BaseResultMap" type="com.personal.pojo.Orders">
+        <id column="ID" property="ID" jdbcType="BIGINT"/>
+        <result column="USER_ID" property="USER_ID" jdbcType="BIGINT"/>
+        <result column="ORDERID" property="ORDERID" jdbcType="VARCHAR"/>
+        <result column="CREATETIME" property="CREATETIME" jdbcType="DATE"/>
+        <result column="NOTE" property="NOTE" jdbcType="VARCHAR"/>
+        <association property="t_user" javaType="com.personal.pojo.T_user">
+            <id column="uID" property="ID" jdbcType="BIGINT"/>
+            <result column="USERNAME" property="USERNAME" jdbcType="VARCHAR"/>
+            <result column="BIRTHDAY" property="BIRTHDAY" jdbcType="DATE"/>
+            <result column="SEX" property="SEX" jdbcType="VARCHAR"/>
+            <result column="ADDRESS" property="ADDRESS" jdbcType="VARCHAR"/>
+        </association>
+        
+        
+        <collection property="orderDetail" ofType="com.personal.pojo.Orderdetail">
+            <id column="odID" property="ID" jdbcType="BIGINT"/>
+            <result column="ORDERS_ID" property="ORDERS_ID" jdbcType="BIGINT"/>
+            <!--<result column="ITEMS_ID" property="ITEMS_ID" jdbcType="BIGINT"/>-->
+            <result column="ITEMS_NUM" property="ITEMS_NUM" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+
+
+    <resultMap id="BaseResultMapLazy" type="com.personal.pojo.Orders">
+        <id column="ID" property="ID" jdbcType="BIGINT"/>
+        <!--<result column="USER_ID" property="USER_ID" jdbcType="BIGINT"/>-->
+        <result column="ORDERID" property="ORDERID" jdbcType="VARCHAR"/>
+        <result column="CREATETIME" property="CREATETIME" jdbcType="DATE"/>
+        <result column="NOTE" property="NOTE" jdbcType="VARCHAR"/>
+
+        <!--select属性作用调用某一个方法（想封装T_user对象时，调用该方法，该方法参数是外键列值，外键列也要在查询范围之内）以实现延迟加载
+        -->
+        <association property="t_user" javaType="com.personal.pojo.T_user" select="com.personal.mapper.T_userMapper.getT_userByUID" column="USER_ID">
+
+        </association>
+    </resultMap>
+
+    <!--用户 - 订单 1-n
+    订单 - 订单明细 1-n-->
+    <select id="getOrdersAndT_users" resultMap="BaseResultMap">
+        select u.ID uID,u.USERNAME,o.ID,o.ORDERID,o.CREATETIME from t_user u join orders o on u.ID=o.USER_ID
+    </select>
+    
+    <select id="getOrdersAndDetailsByID" parameterType="long" resultMap="BaseResultMap">
+        select o.ID,o.ORDERID,od.ITEMS_ID,od.ITEMS_NUM,od.ID odID from orders o join orderdetail od on o.ID=od.ORDERS_ID where o.ID=#{ID}
+    </select>
+
+    <!--延迟加载示例-->
+    <select id="selectLazyOrders" resultMap="BaseResultMapLazy">
+        select * from orders;
+    </select>
+</mapper>

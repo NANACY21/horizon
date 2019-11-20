@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加商品</title>
+    <script src="js/jquery-3.2.1.min.js"></script>
+
+    <script>
+        $(function () {
+            $('input[id="button1"]').click(function () {
+                var id = $('input[name="id"]').val();
+                var name = $('input[name="name"]').val();
+                var price = $('input[name="price"]').val();//ok
+
+                // 从js提交数据到后端，这是一个ajax请求，这样不会刷新页面
+                $.ajax({
+                    type: 'post',
+                    url: 'addItem.action',
+                    contentType: 'application/json;charset=UTF-8',
+                    // 把ui的data封装成json串，把这个json串提交给后台，这是一个ajax请求
+                    data: '{"id":' + id + ',"name":' + name + ',"price":' + price + '}',
+                    // 前台与后台能连通的时候执行success方法
+                    success: function (resp) {
+                        alert(resp);
+                    },
+                    // 前台与后台不能连通的时候执行error方法
+                    error:function () {
+                        alert("添加失败");
+                    }
+                });
+            });
+
+
+            $('input[id="button2"]').click(function () {
+                $.ajax({
+                    url: "listAllItem.action",
+                    type: "get",
+                    success: function (resp) {
+                        var html = "";
+                        $.each(resp, function (k, v) {
+                            html += "<tr><td>" + v.id + "</td><td>" + v.name + "</td><td>" + v.price + "</td></tr>";
+
+                        });
+                        $('table').html(html);
+
+                    }
+                });
+            });
+
+            //获取后端数据
+            $.ajax({
+                url: "getItem.action",
+                type: "get",
+                data: 'id=1',
+                success: function (resp) {
+                    alert(resp.id + "-" + resp.name + "-" + resp.price);
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+json数据交互示例<br/>
+商品id：<input type="text" name="id"><br/>
+商品名称：<input type="text" name="name"><br/>
+商品价格：<input type="text" name="price"><br/>
+<input type="button" id="button1" value="添加商品">
+<hr/>
+
+<input type="button" id="button2" value="列出所有商品">
+<table style="border: 1px solid red">
+</table>
+</body>
+</html>

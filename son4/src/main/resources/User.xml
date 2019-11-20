@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--这是对象关系映射配置文件
+mapper.xml映射文件-->
+<mapper namespace="com.personal.mapper.UserMapper">
+
+    <!--自定义结果集
+    这个本来可以不写
+    要想使用这个自定义的结果集：db操作resultmap写成这个id，即以该规则封装结果集-->
+    <resultMap id="nuserResultMap" type="User">
+        <!--主键-->
+        <id column="uID" property="uID"/>
+        <result column="nickname" property="nickname"/>
+    </resultMap>
+    
+    <!--参数如果是类，#后面是类中有get()的成员变量
+    selectKey好处：办卡后显示卡号，不用findLast了-->
+    <insert id="addUser" parameterType="User">
+        insert into nuser(nickname,password) values(#{nickname},#{password})
+        <selectKey keyProperty="uID" keyColumn="uID" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!--参数简单类型，如int double，#后面随便写-->
+    <delete id="delUser" parameterType="long">
+        delete from nuser where uID=#{uID}
+    </delete>
+
+    <update id="updateUser" parameterType="User">
+        update nuser set nickname=#{nickname},password=#{password} where uID=#{uID}
+    </update>
+
+    <!--
+    查询单条
+    参数简单类型，#后面随便写
+    条件：有set方法，成员变量和字段必须全一样
+
+    解决：db字段起别名，就叫成员变量那个；
+    -->
+    <select id="selectUserByUID" parameterType="long" resultType="User">
+        select * from nuser where uID=#{uID}
+    </select>
+
+    <select id="getAllUser" resultType="User">
+        select * from nuser
+    </select>
+
+    <!--动态sql：解决多条件查询
+    写法要知道
+    这相关百度去
+    if中指的是pojo成员变量-->
+    <select id="selectUserByNicknameAndPassword" parameterType="User" resultType="User">
+        SELECT * FROM nuser
+        <where>
+            <if test="nickname!=null">
+                and nickname=#{nickname}
+            </if>
+            <if test="password!=null">
+                and password=#{password}
+            </if>
+        </where>
+    </select>
+
+    <!--in-->
+    <!--传集合-->
+    <select id="selectUsersByUIDs" resultType="User">
+        select * from nuser where uID in
+        <foreach collection="list" item="uID" open="(" close=")" separator=",">
+            ${uID}
+        </foreach>
+    </select>
+
+    <!--传数组-->
+    <select id="selectUsersByArrayUIDs" resultType="User">
+        select * from nuser where uID in
+        <foreach collection="array" item="uID" open="(" close=")" separator=",">
+            ${uID}
+        </foreach>
+    </select>
+
+    <!--传map-->
+    <select id="selectUsersByMap" resultType="User">
+        select * from nuser where nickname like '%${name}%'
+        <foreach collection="uIDs" item="uID" open=" and uID IN (" close=")" separator=",">
+            #{uID}
+        </foreach>
+    </select>
+
+
+
+
+</mapper>

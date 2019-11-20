@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:tx="http://www.springframework.org/schema/tx" 
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd 
+		">
+
+	<!-- 配置 springIOC 的注解扫描 -->
+	<context:component-scan base-package="com.personal" />
+
+	<!--加载文件-->
+	<context:property-placeholder location="classpath:db.properties" />
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName">
+			<value>${jdbc.driver}</value>
+		</property>
+		<property name="url">
+			<value>${jdbc.url}</value>
+		</property>
+		<property name="username">
+			<value>${jdbc.username}</value>
+		</property>
+		<property name="password">
+			<value>${jdbc.password}</value>
+		</property>
+	</bean>
+
+	<!--类似session工厂-->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<!-- hibernate 相关的属性的注入 -->
+				<!-- 配置数据库类型 -->
+				<property name="database" value="MYSQL" />
+				<!-- 正向工程 true->自动创建表 之后要改成false-->
+				<property name="generateDdl" value="false" />
+				<!-- 显示执行的 SQL -->
+				<property name="showSql" value="true" />
+			</bean>
+		</property>
+		<!-- spring的属性
+		扫描实体的包 -->
+		<property name="packagesToScan">
+			<list>
+				<value>com.personal.pojo</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--事务管理器-->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!--dao接口所在的包-->
+	<jpa:repositories base-package="com.personal.dao"/>
+</beans>

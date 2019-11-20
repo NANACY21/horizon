@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.personal.mapper.ItemsMapper" >
+  <resultMap id="BaseResultMap" type="com.personal.pojo.Items" >
+    <id column="ID" property="id" jdbcType="BIGINT" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="PRICE" property="price" jdbcType="DOUBLE" />
+    <result column="DETAIL" property="detail" jdbcType="VARCHAR" />
+    <result column="PIC" property="pic" jdbcType="VARCHAR" />
+    <result column="CREATETIME" property="createtime" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, PRICE, DETAIL, PIC, CREATETIME
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from items
+    where ID = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="Long" >
+    delete from items
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.personal.pojo.Items" >
+    insert into items (ID, NAME, PRICE, 
+      DETAIL, PIC, CREATETIME
+      )
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{detail,jdbcType=VARCHAR}, #{pic,jdbcType=VARCHAR}, #{createtime,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.personal.pojo.Items" >
+    insert into items
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="price != null" >
+        PRICE,
+      </if>
+      <if test="detail != null" >
+        DETAIL,
+      </if>
+      <if test="pic != null" >
+        PIC,
+      </if>
+      <if test="createtime != null" >
+        CREATETIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="detail != null" >
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="pic != null" >
+        #{pic,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.personal.pojo.Items" >
+    update items
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        PRICE = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="detail != null" >
+        DETAIL = #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="pic != null" >
+        PIC = #{pic,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        CREATETIME = #{createtime,jdbcType=DATE},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.personal.pojo.Items" >
+    update items
+    set NAME = #{name,jdbcType=VARCHAR},
+      PRICE = #{price,jdbcType=DOUBLE},
+      DETAIL = #{detail,jdbcType=VARCHAR},
+      PIC = #{pic,jdbcType=VARCHAR},
+      CREATETIME = #{createtime,jdbcType=DATE}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

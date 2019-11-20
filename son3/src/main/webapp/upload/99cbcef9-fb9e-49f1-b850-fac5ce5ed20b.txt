@@ -1,0 +1,126 @@
+英语四级
+日语JTest、N5考试
+加综测：四级3，acm校赛1，维创网讯出观众0.5，吉利汽车0.5，泛微公司1
+
+
+https://developer.android.google.cn/samples上
+下载示例app 照着编写 编译过了  加上log
+
+
+
+
+管理code - git
+管理文档 - svn
+
+
+
+ssh
+Gerrit
+
+github
+base数据库 - 放源码
+
+
+解压tar.gz->同步->编译
+
+
+ubuntu18.04换源，不要替换文本那种
+安装git
+
+
+
+
+
+
+
+
+程序员需要一直学习的原因：
+版本更新
+新技术的出现
+
+
+
+
+
+2019/08/08
+持续集成
+
+git repo	
+git clone
+git提交代码
+
+svn：管理文档
+svn服务器->
+客户端:svn check out出目录->修改->上传至svn服务器
+svn status
+svn log
+svn commit	提交
+
+管理apk、jar	maven
+.deb	.exe
+
+etc/apt/
+
+bash/shell脚本->.sh文件	批量执行命令
+
+
+vcs
+git
+kernol
+git使用协议：ssh https 底层tcp协议
+git clone -u
+git [clone] brunch
+git push
+git pull
+git status
+git commit id//补丁
+git check out -b
+git merge
+
+git svn!!!!!!!!!!!!!!
+cherry pik
+
+补丁 rebase
+git stash
+
+gerrit	一个服务器 在这上面注册工程
+git push
+change id
+下载gitk
+gedit ./a.txt 记事本设置一下
+
+
+
+kernel
+www.androidxref.com网址作用？
+
+shell脚本
+
+repo gerrit git ->管理、 review 代码 最佳实践
+repo是对git的封装
+repo读取一个xml
+git库
+
+
+一个安卓工程（mirror大小300G）：在server上
+800个工程库200G：
+gms 谷歌移动服务 gemail gtell g浏览器等服务 gplay即google商店 ：60G
+高通code 20G
+剩下120G
+在site上
+提交代码 同步代码
+.gitconfig
+
+从服务器下载，本地mirror没更新，
+第一次repo init --mirror	以后不带mirror
+Ubuntu的system mounter	监视网速、cpu情况
+
+同步	rsyc
+mirror工程内容：无code	找Java文件无，--refrence mirror路径
+
+
+
+source下内容：
+package bluetooth kernel目录 build目录
+
+看视频 洗衣服 完善简历  整理在这都学什么了

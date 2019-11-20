@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="son" />
+        <module name="son2" />
+        <module name="son3" />
+        <module name="son4" />
+        <module name="son5" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="son6" target="1.8" />
+      <module name="son7" target="1.8" />
+      <module name="son8" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="son6" options="-parameters" />
+      <module name="son7" options="-parameters" />
+      <module name="son8" options="-parameters" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           " default-autowire="no">
+
+
+    <!--这是spring的配置文件-->
+
+
+    <!--像xml文件这样配置时不采用自动装配，而是直观的写出来-->
+
+
+    <!--该包下使用注解是好使的
+    这样配置 -> 使能够注解注入（这是注解方式定义bean）-->
+    <context:component-scan base-package="com.personal">
+        <!--该包下的类如果使用这种注解，是不好使的-->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"></context:exclude-filter>-->
+    </context:component-scan>
+
+    <!--对于需要new的对象，这样配置
+    bean是对象，接口不能写在这里
+    dao层对象、业务层需要这样，实体类不需要这样，servlet不能配置成bean-->
+    <bean id="person" class="com.personal.Person">
+        <!--保存依赖关系
+        依赖注入-->
+        <property name="axe">
+
+            <!--这类似set方法-->
+            <ref bean="steelAxe"></ref>
+        </property>
+    </bean>
+
+    <bean id="steelAxe" class="com.personal.SteelAxe"></bean>
+
+    <bean id="stoneAxe" class="com.personal.StoneAxe"></bean>
+
+
+    <!--id一般和接口名一致
+    延迟加载对象-->
+    <bean id="userDao" class="com.personal.dao.impl.UserDaoImpl" lazy-init="true">
+        <property name="name">
+            <value>admin</value>
+        </property>
+    </bean>
+    <bean id="userService" class="com.personal.service.impl.UserServiceImpl">
+        <!--成员变量名
+        设值注入，属性注入-->
+        <property name="userDao">
+            <!--bean的id-->
+            <ref bean="userDao"></ref>
+        </property>
+        <property name="gender">
+            <value>admin</value>
+            <!--设为空值-->
+            <!--<null></null>-->
+        </property>
+    </bean>
+
+    <bean id="userService1" class="com.personal.service.impl.UserServiceImpl">
+        <!--构造器注入，必须要有带参构造器-->
+        <constructor-arg name="userDao" index="0">
+            <ref bean="userDao"/>
+        </constructor-arg>
+
+        <constructor-arg name="gender" index="1">
+            <!--<value>male</value>-->
+            <!--原样输出<>-->
+            <value><![CDATA[<>]]></value>
+        </constructor-arg>
+
+    </bean>
+
+    <bean id="test" class="com.personal.demo.TestCollection">
+        <property name="lst">
+            <list>
+                <value>li1</value>
+                <value>li2</value>
+                <value>li3</value>
+                <value>li4</value>
+                <!--在这里也可以注入匿名bean-->
+            </list>
+        </property>
+
+        <property name="sets">
+            <set>
+                <value>chi1</value>
+                <value>chi2</value>
+                <value>chi3</value>
+                <value>chi4</value>
+            </set>
+        </property>
+
+        <property name="maps">
+            <map>
+                <entry>
+                    <key>
+                        <value>first</value>
+                    </key>
+                    <value>lichi</value>
+                </entry>
+                <entry>
+                    <key>
+                        <value>second</value>
+                    </key>
+                    <value>lichi2</value>
+                </entry>
+            </map>
+        </property>
+
+        <property name="props">
+            <props>
+                <prop key="aaa1">123</prop>
+                <prop key="aaa2">1233</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

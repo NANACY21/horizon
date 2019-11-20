@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+           " default-autowire="no">
+
+    <!--像xml文件这样配置时不采用自动装配，而是直观的写出来-->
+
+    <!--该包下使用注解是好使的，比如Component注解-->
+    <context:component-scan base-package="com.personal">
+        <!--该包下的类如果使用这种注解，是不好使的-->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"></context:exclude-filter>-->
+    </context:component-scan>
+
+    <!--识别Aspect注解
+    springAOP用注解方式设置动态代理要这么写
+    true：代理方式：基于cglib，适用于代理目标没有接口的情况
+    默认基于jdk代理-->
+    <aop:aspectj-autoproxy proxy-target-class="true">
+
+    </aop:aspectj-autoproxy>
+
+
+    <!--这样写就不用为Java类加注解以注入bean容器了-->
+    <!--<bean id="deptAspect" class="com.personal.aspect.DeptAspect"></bean>-->
+    <aop:config>
+        <aop:aspect ref="deptAspect">
+            <!--表示碰到add开头()只加前置通知
+            通俗的讲就是所有add开头的方法执行前都执行test1方法-->
+            <aop:before method="test1" pointcut="execution(* com.personal.service.DeptService.adda*(..))"/>
+            <!--表示碰到所有方法都加后置通知-->
+            <!--<aop:after method="test2" pointcut="execution(* *(..))"/>-->
+            <aop:after method="test2" pointcut="execution(* com.personal.service.DeptService.adda*(..))"/>
+        </aop:aspect>
+    </aop:config>
+
+
+    <!--关于spring对dao的支持-->
+
+
+
+
+    <!--在spring中加载一个properties文件
+    这就可以用spring el表达式获取key-->
+    <context:property-placeholder location="classpath:db.properties"></context:property-placeholder>
+
+    <!--配置第三方的bean，第三方对象注入-->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName">
+            <!--这是db.properties的key-->
+            <value>${jdbc.driver}</value>
+        </property>
+
+        <!--这里注意，这应该是成员变量名，但是，这是反射，要看set方法的，当然，它有提示-->
+        <property name="username">
+            <value>${jdbc.username}</value>
+        </property>
+        <property name="url">
+            <value>${jdbc.url}</value>
+        </property>
+        <property name="password">
+            <value>${jdbc.password}</value>
+        </property>
+    </bean>
+
+    <!--这也是注入第三方bean，成员变量的注入要看源码，是构造器注入还是设值注入-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource">
+            <!--这是设值注入
+            传参是自己配置好的dataSource的bean-->
+            <ref bean="dataSource"></ref>
+        </property>
+    </bean>
+
+
+
+    <!--spring对事务处理的支持-->
+
+
+    <!--定义一个事务管理器，绑定数据源
+
+    事务管理器是一个AOP的应用-->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--这是注解驱动的，要结合注解来使用-->
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+</beans>

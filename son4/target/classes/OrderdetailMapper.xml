@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.personal.mapper.OrderdetailMapper">
+
+    <resultMap id="BaseResultMap" type="com.personal.pojo.Orderdetail">
+        <id column="ID" property="ID" jdbcType="BIGINT"/>
+        <result column="ORDERS_ID" property="ORDERS_ID" jdbcType="BIGINT"/>
+        <result column="ITEMS_ID" property="ITEMS_ID" jdbcType="BIGINT"/>
+        <result column="ITEMS_NUM" property="ITEMS_NUM" jdbcType="INTEGER"/>
+    </resultMap>
+</mapper>
