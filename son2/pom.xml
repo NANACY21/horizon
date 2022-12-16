@@ -14,7 +14,7 @@
         <!--
         自定义属性
         以统一版本号-->
-        <spring.version>5.0.6.RELEASE</spring.version>
+        <spring.version>5.2.20.RELEASE</spring.version>
     </properties>
     <dependencies>
         <dependency>
